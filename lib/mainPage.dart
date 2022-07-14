@@ -76,15 +76,15 @@ class _MainPageState extends State<MainPage>
       littleTextColor = const Color.fromRGBO(0, 0, 0, 0.4);
     }
 
-    const boxDecoration =  BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/cell.jpg'),
-            fit: BoxFit.cover,
-          ),
-        );
+    const boxDecoration = BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/cell.jpg'),
+        fit: BoxFit.cover,
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
-        title: Text('salom'),
+        
       ),
       drawer: Drawer(
         child: ListView(
@@ -100,189 +100,190 @@ class _MainPageState extends State<MainPage>
       ),
       backgroundColor: bgColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Builder(builder: (context) {
-            scaffoldContext = context;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(26),
-                  onTap: () {
-                    align = night
-                        ? const Alignment(0.7, 0)
-                        : const Alignment(-0.7, 0);
-                    night = !night;
-                    mornig = !mornig;
+        child: Builder(builder: (context) {
+          scaffoldContext = context;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // InkWell(
+              //   borderRadius: BorderRadius.circular(26),
+              //   onTap: () {
+              //     align = night
+              //         ? const Alignment(0.7, 0)
+              //         : const Alignment(-0.7, 0);
+              //     night = !night;
+              //     mornig = !mornig;
 
-                    setState(() {});
-                    visibleMoon = !visibleMoon;
-                    visibleSun = !visibleSun;
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      top: size.height * 0.02,
-                    ),
-                    height: 32,
-                    width: 72,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(26),
-                      color: containerColor,
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        AnimatedAlign(
-                          alignment: align,
-                          duration: const Duration(milliseconds: 350),
-                          child: Container(
-                            height: 24,
-                            width: 24,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: switchColor,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Visibility(
-                              visible: visibleSun,
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 8),
-                                child: Icon(
-                                  Icons.sunny,
-                                  color: Color.fromRGBO(75, 94, 252, 1),
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: visibleMoon,
-                              child: const Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  Icons.mode_night_outlined,
-                                  color: Color.fromRGBO(75, 94, 252, 1),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: size.height * 0.01,
-                ),
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.centerRight,
-                  child: Column(
-                    children: [
-                      TextField(
-                        style: sTextStyle(
-                          color: littleTextColor,
-                          size: size.height * 0.06,
-                          fontWeight: FontWeight.w300,
-                        ),
-                        textAlign: TextAlign.right,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                        controller: littleText,
+              //     setState(() {});
+              //     visibleMoon = !visibleMoon;
+              //     visibleSun = !visibleSun;
+              //   },
+              //   child: Container(
+              //     margin: EdgeInsets.only(
+              //       top: size.height * 0.02,
+              //     ),
+              //     height: 32,
+              //     width: 72,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(26),
+              //       color: containerColor,
+              //     ),
+              //     child: Stack(
+              //       alignment: Alignment.center,
+              //       children: [
+              //         AnimatedAlign(
+              //           alignment: align,
+              //           duration: const Duration(milliseconds: 350),
+              //           child: Container(
+              //             height: 24,
+              //             width: 24,
+              //             decoration: BoxDecoration(
+              //               borderRadius: BorderRadius.circular(12),
+              //               color: switchColor,
+              //             ),
+              //           ),
+              //         ),
+              //         Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: [
+              //             Visibility(
+              //               visible: visibleSun,
+              //               child: const Padding(
+              //                 padding: EdgeInsets.only(left: 8),
+              //                 child: Icon(
+              //                   Icons.sunny,
+              //                   color: Color.fromRGBO(75, 94, 252, 1),
+              //                 ),
+              //               ),
+              //             ),
+              //             Visibility(
+              //               visible: visibleMoon,
+              //               child: const Padding(
+              //                 padding: EdgeInsets.only(right: 8),
+              //                 child: Icon(
+              //                   Icons.mode_night_outlined,
+              //                   color: Color.fromRGBO(75, 94, 252, 1),
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
+              Container(
+                width: double.infinity,
+                alignment: Alignment.centerRight,
+                child: Column(
+                  children: [
+                    TextField(
+                      style: sTextStyle(
+                        color: littleTextColor,
+                        size: size.height * 0.06,
+                        fontWeight: FontWeight.w300,
                       ),
-                      TextField(
-                        style: sTextStyle(
-                          color: colorText,
-                          size: sizeBigText,
-                          fontWeight: FontWeight.w300,
-                        ),
-                        textAlign: TextAlign.right,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                        controller: textController,
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
                       ),
-                    ],
-                  ),
+                      controller: littleText,
+                    ),
+                    TextField(
+                      style: sTextStyle(
+                        color: colorText,
+                        size: sizeBigText,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      controller: textController,
+                    ),
+                  ],
                 ),
-                InkWell(
-                  onTapDown: (child) {
-                    PointerDownEvent(pressureMin: 5);
-                    print('aaaaa');
-                    //calculate();
-                  },
-                  child: GridView.count(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: size.height > 800
-                        ? 1.0
-                        : size.height > 700
-                            ? 1.1
-                            : 1.2,
-                    crossAxisCount: 4,
-                    primary: false,
-                    children: [
-                      buttons('C', functionClear: clear, color1),
-                      buttons('+/-', functionMultiMinus: multiMinus, color1),
-                      buttons('%', functionPercentage: percentage, color1),
-                      buttons(
-                          '/',
-                          functionDevide: devide,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('7', functionNum: writeNumbers, color2),
-                      buttons('8', functionNum: writeNumbers, color2),
-                      buttons('9', functionNum: writeNumbers, color2),
-                      buttons(
-                          'x',
-                          functionMultiple: multiple,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('4', functionNum: writeNumbers, color2),
-                      buttons('5', functionNum: writeNumbers, color2),
-                      buttons('6', functionNum: writeNumbers, color2),
-                      buttons(
-                          '-',
-                          functionMinus: minus,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('1', functionNum: writeNumbers, color2),
-                      buttons('2', functionNum: writeNumbers, color2),
-                      buttons('3', functionNum: writeNumbers, color2),
-                      buttons(
-                          '+',
-                          functionPlus: plus,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('.', functionNum: writeNumbers, color2),
-                      buttons('0', functionNum: writeNumbers, color2),
-                      buttons(
-                          '<x|',
-                          functionDeleteLast: deleteLast,
-                          color2,
-                          boolIcon: true),
-                      buttons(
-                          '=',
-                          functionCalculate: calculate,
-                          color3,
-                          colorBlu: Colors.white),
-                    ],
-                  ),
+              ),
+              RefreshIndicator(
+                onRefresh: () async {
+                  calculate();
+                },
+                triggerMode: RefreshIndicatorTriggerMode.anywhere,
+                color: Colors.transparent,
+                backgroundColor: Colors.transparent,
+                child: GridView.count(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  physics: BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: size.height > 800
+                      ? 1.0
+                      : size.height > 700
+                          ? 1.1
+                          : 1.3,
+                  crossAxisCount: 4,
+                  // primary: false,
+                  children: [
+                    buttons('C', functionClear: clear, color1),
+                    buttons('+/-', functionMultiMinus: multiMinus, color1),
+                    buttons('%', functionPercentage: percentage, color1),
+                    buttons(
+                        '/',
+                        functionDevide: devide,
+                        color3,
+                        colorBlu: Colors.white),
+                    buttons('7', functionNum: writeNumbers, color2),
+                    buttons('8', functionNum: writeNumbers, color2),
+                    buttons('9', functionNum: writeNumbers, color2),
+                    buttons(
+                        'x',
+                        functionMultiple: multiple,
+                        color3,
+                        colorBlu: Colors.white),
+                    buttons('4', functionNum: writeNumbers, color2),
+                    buttons('5', functionNum: writeNumbers, color2),
+                    buttons('6', functionNum: writeNumbers, color2),
+                    buttons(
+                        '-',
+                        functionMinus: minus,
+                        color3,
+                        colorBlu: Colors.white),
+                    buttons('1', functionNum: writeNumbers, color2),
+                    buttons('2', functionNum: writeNumbers, color2),
+                    buttons('3', functionNum: writeNumbers, color2),
+                    buttons(
+                        '+',
+                        functionPlus: plus,
+                        color3,
+                        colorBlu: Colors.white),
+                    buttons('.', functionNum: writeNumbers, color2),
+                    buttons('0', functionNum: writeNumbers, color2),
+                    buttons(
+                        '<x|',
+                        functionDeleteLast: deleteLast,
+                        color2,
+                        boolIcon: true),
+                    buttons(
+                        '=',
+                        functionCalculate: calculate,
+                        color3,
+                        colorBlu: Colors.white),
+                  ],
                 ),
-              ],
-            );
-          }),
-        ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -485,10 +486,13 @@ class _MainPageState extends State<MainPage>
       borderRadius: BorderRadius.circular(24),
       child: Container(
         alignment: Alignment.center,
-        height: displayHeight * 0.00175,
+        height: 65, //displayHeight * 0.00175,
         width: displayHeight * 0.00175,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: const [
+            BoxShadow(color: Colors.white, blurRadius: 8, spreadRadius: 2),
+          ],
           color: color,
         ),
         child: Builder(builder: (context) {
