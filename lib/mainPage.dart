@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:calculation/utils/const.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/src/foundation/key.dart';
@@ -15,39 +18,59 @@ class _MainPageState extends State<MainPage>
   late num son1, son2;
   late int amal;
   late BuildContext scaffoldContext;
+  //bool visibleCricle = false;
 
   Alignment align = const Alignment(-0.8, 0);
+  Alignment aligntext = const Alignment(-0.8, 0);
   bool night = true, mornig = false, visibleSun = false, visibleMoon = true;
   Color switchColor = const Color(0xff4E505F);
   Color color1 = const Color(0xff4E505F);
   Color color2 = const Color(0xff2E2F38);
   Color color3 = const Color(0xff4B5EFC);
-  Color bgColor = const Color(0xff17171C);
+  Color bgColor = Colors.black;
   Color colorText = Colors.white;
   Color containerColor = const Color(0xff2E2F38);
   Color littleTextColor = const Color.fromRGBO(255, 255, 255, 0.4);
+
   //var heightB;
 
   late AnimationController _controller;
   late Animation<double> animScale;
+  late Animation<double> animName;
+  late ScrollController controllerScroll;
+
   final textController = TextEditingController();
   final littleText = TextEditingController();
   late double displayHeight;
   late double displayWidth;
   late double sizeBigText = displayHeight * 0.092;
+  double animCricleClear = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 1800), vsync: this);
     animScale = Tween<double>(begin: 0.7, end: 1.3).animate(_controller);
+    animName = Tween<double>(begin: -100, end: 400).animate(_controller);
     textController.text = '0';
     littleText.text = '';
+    controllerScroll = ScrollController();
+
+    controllerScroll.addListener(() {
+      if (controllerScroll.hasClients) {
+        if (controllerScroll.position.maxScrollExtent ==
+            controllerScroll.offset) {
+          calculate();
+        }
+      }
+    });
+    _controller.repeat();
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     textController.dispose();
     littleText.dispose();
     super.dispose();
@@ -60,7 +83,7 @@ class _MainPageState extends State<MainPage>
     displayWidth = size.width;
 
     //heightB = size.height;
-    bgColor = const Color(0xff17171C);
+    bgColor = Colors.black;
     color2 = const Color(0xff2E2F38);
     colorText = Colors.white;
     containerColor = const Color(0xff2E2F38);
@@ -84,17 +107,54 @@ class _MainPageState extends State<MainPage>
     );
     return Scaffold(
       appBar: AppBar(
-        
+        backgroundColor: Colors.black,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+              child: Image.asset(
+                'assets/calc_icon.png',
+                height: 30,
+              ),
+            ),
+            InkWell(
+              child: Image.asset(
+                'assets/curr_icon.png',
+                height: 40,
+              ),
+            ),
+            InkWell(
+              child: Image.asset(
+                'assets/rule_icon.png',
+                height: 40,
+              ),
+            ),
+            InkWell(
+              child: Image.asset(
+                'assets/sett_icon.png',
+                height: 40,
+              ),
+            )
+          ],
+        ),
       ),
       drawer: Drawer(
-        child: ListView(
+        width: 250,
+        backgroundColor: const Color(0xff2D2D2D),
+        child: GridView.count(
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 0.5,
+          crossAxisCount: 2,
           children: [
-            ListTile(
-              title: Text('Cancel'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+            //     ListTile(
+            //   title: const Text('Cancel'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //   },
+            // ),
+            calc_view_bottom('assets/calc_img.jpg'),
+            calc_view_bottom('assets/calc_img.jpg'),
           ],
         ),
       ),
@@ -181,18 +241,44 @@ class _MainPageState extends State<MainPage>
                 alignment: Alignment.centerRight,
                 child: Column(
                   children: [
-                    TextField(
-                      style: sTextStyle(
-                        color: littleTextColor,
-                        size: size.height * 0.06,
-                        fontWeight: FontWeight.w300,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          AnimatedBuilder(
+                              animation: animName,
+                              builder: (context, child) {
+                                return Text(
+                                  'Saidmirzo',
+                                  style: TextStyle(
+                                    //color: Colors.white,
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.w300,
+                                    foreground: Paint()
+                                      ..shader = const LinearGradient(
+                                        colors: <Color>[
+                                          Colors.black,
+                                          Colors.white,
+                                          Colors.black
+                                          //add more color here.
+                                        ],
+                                      ).createShader(
+                                        Rect.fromLTWH(
+                                            animName.value, 0.0, 200.0, 100.0),
+                                      ),
+                                  ),
+                                );
+                              }),
+                          Image.asset(
+                            'assets/clock_ico.png',
+                            height: 40,
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.right,
-                      readOnly: true,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                      controller: littleText,
                     ),
                     TextField(
                       style: sTextStyle(
@@ -207,83 +293,123 @@ class _MainPageState extends State<MainPage>
                       ),
                       controller: textController,
                     ),
+                    TextField(
+                      style: sTextStyle(
+                        color: littleTextColor,
+                        size: size.height * 0.05,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      controller: littleText,
+                    ),
                   ],
                 ),
               ),
-              RefreshIndicator(
-                onRefresh: () async {
-                  calculate();
-                },
-                triggerMode: RefreshIndicatorTriggerMode.anywhere,
-                color: Colors.transparent,
-                backgroundColor: Colors.transparent,
-                child: GridView.count(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                  physics: BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: size.height > 800
-                      ? 1.0
-                      : size.height > 700
-                          ? 1.1
-                          : 1.3,
-                  crossAxisCount: 4,
-                  // primary: false,
-                  children: [
-                    buttons('C', functionClear: clear, color1),
-                    buttons('+/-', functionMultiMinus: multiMinus, color1),
-                    buttons('%', functionPercentage: percentage, color1),
-                    buttons(
-                        '/',
-                        functionDevide: devide,
-                        color3,
-                        colorBlu: Colors.white),
-                    buttons('7', functionNum: writeNumbers, color2),
-                    buttons('8', functionNum: writeNumbers, color2),
-                    buttons('9', functionNum: writeNumbers, color2),
-                    buttons(
-                        'x',
-                        functionMultiple: multiple,
-                        color3,
-                        colorBlu: Colors.white),
-                    buttons('4', functionNum: writeNumbers, color2),
-                    buttons('5', functionNum: writeNumbers, color2),
-                    buttons('6', functionNum: writeNumbers, color2),
-                    buttons(
-                        '-',
-                        functionMinus: minus,
-                        color3,
-                        colorBlu: Colors.white),
-                    buttons('1', functionNum: writeNumbers, color2),
-                    buttons('2', functionNum: writeNumbers, color2),
-                    buttons('3', functionNum: writeNumbers, color2),
-                    buttons(
-                        '+',
-                        functionPlus: plus,
-                        color3,
-                        colorBlu: Colors.white),
-                    buttons('.', functionNum: writeNumbers, color2),
-                    buttons('0', functionNum: writeNumbers, color2),
-                    buttons(
-                        '<x|',
-                        functionDeleteLast: deleteLast,
-                        color2,
-                        boolIcon: true),
-                    buttons(
-                        '=',
-                        functionCalculate: calculate,
-                        color3,
-                        colorBlu: Colors.white),
-                  ],
-                ),
+
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment(1, -1),
+                    child: Transform.translate(
+                      offset: Offset(20, -10),
+                      child: AnimatedScale(
+                        duration: Duration(milliseconds: 500),
+                        scale: animCricleClear,
+                        child: Container(
+                          //alignment: Alignment.bottomRight,
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GridView.count(
+                    controller: controllerScroll,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 10),
+                    physics: BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: size.height > 800
+                        ? 1.0
+                        : size.height > 700
+                            ? 1.1
+                            : 1.3,
+                    crossAxisCount: 4,
+                    // primary: false,
+                    children: [
+                      buttons('C', functionClear: clear, color1),
+                      buttons('+/-', functionMultiMinus: multiMinus, color1),
+                      buttons('%', functionPercentage: percentage, color1),
+                      buttons(
+                          '/',
+                          functionDevide: devide,
+                          color3,
+                          colorBlu: Colors.white),
+                      buttons('7', functionNum: writeNumbers, color2),
+                      buttons('8', functionNum: writeNumbers, color2),
+                      buttons('9', functionNum: writeNumbers, color2),
+                      buttons(
+                          'x',
+                          functionMultiple: multiple,
+                          color3,
+                          colorBlu: Colors.white),
+                      buttons('4', functionNum: writeNumbers, color2),
+                      buttons('5', functionNum: writeNumbers, color2),
+                      buttons('6', functionNum: writeNumbers, color2),
+                      buttons(
+                          '-',
+                          functionMinus: minus,
+                          color3,
+                          colorBlu: Colors.white),
+                      buttons('1', functionNum: writeNumbers, color2),
+                      buttons('2', functionNum: writeNumbers, color2),
+                      buttons('3', functionNum: writeNumbers, color2),
+                      buttons(
+                          '+',
+                          functionPlus: plus,
+                          color3,
+                          colorBlu: Colors.white),
+                      buttons('.', functionNum: writeNumbers, color2),
+                      buttons('0', functionNum: writeNumbers, color2),
+                      buttons(
+                          '<x|',
+                          functionDeleteLast: deleteLast,
+                          color2,
+                          boolIcon: true),
+                      buttons(
+                          '=',
+                          functionCalculate: calculate,
+                          color3,
+                          colorBlu: Colors.white),
+                    ],
+                  ),
+                ],
               ),
             ],
           );
         }),
+      ),
+    );
+  }
+
+  InkWell calc_view_bottom(String path) {
+    return InkWell(
+      onTap: (() {}),
+      child: Container(
+        height: 100,
+        width: 50,
+        child: Image.asset(path),
       ),
     );
   }
@@ -311,6 +437,7 @@ class _MainPageState extends State<MainPage>
       }
       textController.text = natija.toString();
       littleText.text = '0';
+      aligntext = const Alignment(-0.4, 0);
       setState(() {});
     }
   }
@@ -374,10 +501,15 @@ class _MainPageState extends State<MainPage>
     setState(() {});
   }
 
-  void clear() {
+  void clear() async {
     textController.text = '0';
     littleText.text = '';
     sizeBigText = displayHeight * 0.092;
+    animCricleClear = 20;
+
+    setState(() {});
+    await Future.delayed(Duration(milliseconds: 500));
+    animCricleClear = 0;
     setState(() {});
   }
 
@@ -491,9 +623,13 @@ class _MainPageState extends State<MainPage>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           boxShadow: const [
-            BoxShadow(color: Colors.white, blurRadius: 8, spreadRadius: 2),
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 8,
+              spreadRadius: 2,
+            ),
           ],
-          color: color,
+          color: Colors.black,
         ),
         child: Builder(builder: (context) {
           if (boolIcon) {
