@@ -1,10 +1,8 @@
-import 'dart:async';
-import 'dart:ui';
+import 'dart:ffi';
 
+import 'package:calculation/designs.dart';
 import 'package:calculation/utils/const.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/src/foundation/key.dart';
-// import 'package:flutter/src/widgets/framework.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -15,32 +13,42 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
+  UiNine _uiNine = UiNine();
+  UiSeven _uiSeven = UiSeven();
+  UiTwo _uiTwo = UiTwo();
+  UiFour _uiFour = UiFour();
+
   late num son1, son2;
   late int amal;
   late BuildContext scaffoldContext;
-  //bool visibleCricle = false;
 
-  Alignment align = const Alignment(-0.8, 0);
-  Alignment aligntext = const Alignment(-0.8, 0);
-  bool night = true, mornig = false, visibleSun = false, visibleMoon = true;
-  Color switchColor = const Color(0xff4E505F);
+  //Alignment align = const Alignment(-0.8, 0);
+  //Alignment aligntext = const Alignment(-0.8, 0);
+  //bool night = true, mornig = false, visibleSun = false, visibleMoon = true;
+  //Color switchColor = const Color(0xff4E505F);
+
+  late BoxDecoration boxDecoration;
+  late BoxDecoration boxDecorationSpes;
+
   Color color1 = const Color(0xff4E505F);
   Color color2 = const Color(0xff2E2F38);
   Color color3 = const Color(0xff4B5EFC);
   Color bgColor = Colors.black;
   Color colorText = Colors.white;
+  Color spesTextColor = Colors.white;
   Color containerColor = const Color(0xff2E2F38);
-  Color littleTextColor = const Color.fromRGBO(255, 255, 255, 0.4);
-
-  //var heightB;
+  Color drawerColor = const Color(0xff2D2D2D);
+  Color colorIcon = const Color.fromRGBO(149, 149, 149, 1);
+  Color colorDarkIcon = Colors.white;
+  double gridSpace = 10;
 
   late AnimationController _controller;
-  late Animation<double> animScale;
   late Animation<double> animName;
   late ScrollController controllerScroll;
 
   final textController = TextEditingController();
-  final littleText = TextEditingController();
+  final littleTextController = TextEditingController();
+
   late double displayHeight;
   late double displayWidth;
   late double sizeBigText = displayHeight * 0.092;
@@ -51,10 +59,22 @@ class _MainPageState extends State<MainPage>
     super.initState();
     _controller = AnimationController(
         duration: const Duration(milliseconds: 1800), vsync: this);
-    animScale = Tween<double>(begin: 0.7, end: 1.3).animate(_controller);
+
+    bgColor = _uiTwo.bgColor;
+    colorText = _uiTwo.colorText;
+    spesTextColor = _uiTwo.spesTextColor;
+    containerColor = _uiTwo.containerColor;
+    drawerColor = _uiTwo.drawerColor;
+    colorIcon = _uiTwo.colorIcon;
+    colorDarkIcon = _uiTwo.colorDarkIcon;
+    boxDecoration = _uiTwo.boxDecoration;
+    boxDecorationSpes = _uiTwo.boxDecorationSpes;
+    gridSpace = _uiTwo.gridSpace;
+
+    //boxDecoration = _uiNine.boxDecoration;
     animName = Tween<double>(begin: -100, end: 400).animate(_controller);
     textController.text = '0';
-    littleText.text = '';
+    littleTextController.text = '';
     controllerScroll = ScrollController();
 
     controllerScroll.addListener(() {
@@ -72,7 +92,7 @@ class _MainPageState extends State<MainPage>
   void dispose() {
     _controller.dispose();
     textController.dispose();
-    littleText.dispose();
+    littleTextController.dispose();
     super.dispose();
   }
 
@@ -81,33 +101,27 @@ class _MainPageState extends State<MainPage>
     var size = MediaQuery.of(context).size;
     displayHeight = size.height;
     displayWidth = size.width;
+    print(displayHeight);
 
-    //heightB = size.height;
-    bgColor = Colors.black;
-    color2 = const Color(0xff2E2F38);
-    colorText = Colors.white;
-    containerColor = const Color(0xff2E2F38);
-    littleTextColor = const Color.fromRGBO(255, 255, 255, 0.4);
-    switchColor = const Color(0xff4E505F);
+    // bgColor = Colors.black;
+    // color2 = const Color(0xff2E2F38);
+    // colorText = Colors.white;
+    // containerColor = const Color(0xff2E2F38);
 
-    if (mornig) {
-      switchColor = const Color(0xffD2D3DA);
-      bgColor = const Color(0xffF1F2F3);
-      color2 = const Color(0xffFFFFFF);
-      colorText = Colors.black;
-      containerColor = const Color(0xffFFFFFF);
-      littleTextColor = const Color.fromRGBO(0, 0, 0, 0.4);
-    }
+    // if (mornig) {
+    //   switchColor = const Color(0xffD2D3DA);
+    //   bgColor = const Color(0xffF1F2F3);
+    //   color2 = const Color(0xffFFFFFF);
+    //   colorText = Colors.black;
+    //   containerColor = const Color(0xffFFFFFF);
+    //   littleTextControllerColor = const Color.fromRGBO(0, 0, 0, 0.4);
+    // }
 
-    const boxDecoration = BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/cell.jpg'),
-        fit: BoxFit.cover,
-      ),
-    );
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: bgColor,
+        iconTheme: IconThemeData(color: colorDarkIcon, size: 32),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -115,32 +129,36 @@ class _MainPageState extends State<MainPage>
               child: Image.asset(
                 'assets/calc_icon.png',
                 height: 30,
+                color: colorDarkIcon,
               ),
             ),
             InkWell(
               child: Image.asset(
                 'assets/curr_icon.png',
                 height: 40,
+                color: colorIcon,
               ),
             ),
             InkWell(
               child: Image.asset(
                 'assets/rule_icon.png',
                 height: 40,
+                color: colorIcon,
               ),
             ),
             InkWell(
               child: Image.asset(
                 'assets/sett_icon.png',
-                height: 40,
+                height: 35,
+                color: colorDarkIcon,
               ),
             )
           ],
         ),
       ),
       drawer: Drawer(
-        width: 250,
-        backgroundColor: const Color(0xff2D2D2D),
+        width: displayWidth * 0.75,
+        backgroundColor: drawerColor,
         child: GridView.count(
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
@@ -153,12 +171,13 @@ class _MainPageState extends State<MainPage>
             //     Navigator.pop(context);
             //   },
             // ),
-            calc_view_bottom('assets/calc_img.jpg'),
-            calc_view_bottom('assets/calc_img.jpg'),
+            calc_view_bottom('assets/calc9_img.jpg', _uiNine),
+            calc_view_bottom('assets/calc7_img.jpg', _uiSeven),
+            calc_view_bottom('assets/calc2_img.jpg', _uiTwo),
+            calc_view_bottom('assets/calc4_img.jpg', _uiFour),
           ],
         ),
       ),
-      backgroundColor: bgColor,
       body: SafeArea(
         child: Builder(builder: (context) {
           scaffoldContext = context;
@@ -259,11 +278,11 @@ class _MainPageState extends State<MainPage>
                                     fontSize: 40,
                                     fontWeight: FontWeight.w300,
                                     foreground: Paint()
-                                      ..shader = const LinearGradient(
+                                      ..shader = LinearGradient(
                                         colors: <Color>[
-                                          Colors.black,
+                                          bgColor,
                                           Colors.white,
-                                          Colors.black
+                                          bgColor
                                           //add more color here.
                                         ],
                                       ).createShader(
@@ -276,6 +295,7 @@ class _MainPageState extends State<MainPage>
                           Image.asset(
                             'assets/clock_ico.png',
                             height: 40,
+                            color: colorDarkIcon,
                           ),
                         ],
                       ),
@@ -295,7 +315,7 @@ class _MainPageState extends State<MainPage>
                     ),
                     TextField(
                       style: sTextStyle(
-                        color: littleTextColor,
+                        color: colorText,
                         size: size.height * 0.05,
                         fontWeight: FontWeight.w300,
                       ),
@@ -304,7 +324,7 @@ class _MainPageState extends State<MainPage>
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                       ),
-                      controller: littleText,
+                      controller: littleTextController,
                     ),
                   ],
                 ),
@@ -313,11 +333,11 @@ class _MainPageState extends State<MainPage>
               Stack(
                 children: [
                   Align(
-                    alignment: Alignment(1, -1),
+                    alignment: const Alignment(1, -1),
                     child: Transform.translate(
-                      offset: Offset(20, -10),
+                      offset: const Offset(20, -10),
                       child: AnimatedScale(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         scale: animCricleClear,
                         child: Container(
                           //alignment: Alignment.bottomRight,
@@ -330,69 +350,84 @@ class _MainPageState extends State<MainPage>
                       ),
                     ),
                   ),
-                  GridView.count(
-                    controller: controllerScroll,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    physics: BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: size.height > 800
-                        ? 1.0
-                        : size.height > 700
-                            ? 1.1
-                            : 1.3,
-                    crossAxisCount: 4,
-                    // primary: false,
-                    children: [
-                      buttons('C', functionClear: clear, color1),
-                      buttons('+/-', functionMultiMinus: multiMinus, color1),
-                      buttons('%', functionPercentage: percentage, color1),
-                      buttons(
-                          '/',
-                          functionDevide: devide,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('7', functionNum: writeNumbers, color2),
-                      buttons('8', functionNum: writeNumbers, color2),
-                      buttons('9', functionNum: writeNumbers, color2),
-                      buttons(
-                          'x',
-                          functionMultiple: multiple,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('4', functionNum: writeNumbers, color2),
-                      buttons('5', functionNum: writeNumbers, color2),
-                      buttons('6', functionNum: writeNumbers, color2),
-                      buttons(
-                          '-',
-                          functionMinus: minus,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('1', functionNum: writeNumbers, color2),
-                      buttons('2', functionNum: writeNumbers, color2),
-                      buttons('3', functionNum: writeNumbers, color2),
-                      buttons(
-                          '+',
-                          functionPlus: plus,
-                          color3,
-                          colorBlu: Colors.white),
-                      buttons('.', functionNum: writeNumbers, color2),
-                      buttons('0', functionNum: writeNumbers, color2),
-                      buttons(
-                          '<x|',
-                          functionDeleteLast: deleteLast,
-                          color2,
-                          boolIcon: true),
-                      buttons(
-                          '=',
-                          functionCalculate: calculate,
-                          color3,
-                          colorBlu: Colors.white),
-                    ],
+                  Container(
+                    color: containerColor,
+                    child: GridView.count(
+                      controller: controllerScroll,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 5),
+                      physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      crossAxisSpacing: gridSpace,
+                      mainAxisSpacing: gridSpace,
+                      childAspectRatio: size.height > 800
+                          ? 1.11
+                          : size.height > 700
+                              ? 1.2
+                              : 1.3,
+                      crossAxisCount: 4,
+                      // primary: false,
+                      children: [
+                        buttons(
+                            'C',
+                            functionClear: clear,
+                            color1,
+                            spesColor: spesTextColor),
+                        buttons(
+                            '+/-',
+                            functionMultiMinus: multiMinus,
+                            color1,
+                            spesColor: spesTextColor),
+                        buttons(
+                            '%',
+                            functionPercentage: percentage,
+                            color1,
+                            spesColor: spesTextColor),
+                        buttons(
+                            '/',
+                            functionDevide: devide,
+                            color3,
+                            spesColor: spesTextColor),
+                        buttons('7', functionNum: writeNumbers, color2),
+                        buttons('8', functionNum: writeNumbers, color2),
+                        buttons('9', functionNum: writeNumbers, color2),
+                        buttons(
+                            'x',
+                            functionMultiple: multiple,
+                            color3,
+                            spesColor: spesTextColor),
+                        buttons('4', functionNum: writeNumbers, color2),
+                        buttons('5', functionNum: writeNumbers, color2),
+                        buttons('6', functionNum: writeNumbers, color2),
+                        buttons(
+                            '-',
+                            functionMinus: minus,
+                            color3,
+                            spesColor: spesTextColor),
+                        buttons('1', functionNum: writeNumbers, color2),
+                        buttons('2', functionNum: writeNumbers, color2),
+                        buttons('3', functionNum: writeNumbers, color2),
+                        buttons(
+                            '+',
+                            functionPlus: plus,
+                            color3,
+                            spesColor: spesTextColor),
+                        buttons('.', functionNum: writeNumbers, color2),
+                        buttons('0', functionNum: writeNumbers, color2),
+                        buttons(
+                            '<x|',
+                            functionDeleteLast: deleteLast,
+                            color2,
+                            boolIcon: true),
+                        buttons(
+                            '=',
+                            functionCalculate: calculate,
+                            color3,
+                            spesColor: spesTextColor),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -403,9 +438,23 @@ class _MainPageState extends State<MainPage>
     );
   }
 
-  InkWell calc_view_bottom(String path) {
+  // ignore: non_constant_identifier_names
+  InkWell calc_view_bottom(String path, dynamic className) {
     return InkWell(
-      onTap: (() {}),
+      onTap: (() {
+        print('tap');
+        boxDecoration = className.boxDecoration;
+        boxDecorationSpes = className.boxDecorationSpes;
+        bgColor = className.bgColor;
+        colorText = className.colorText;
+        spesTextColor = className.spesTextColor;
+        containerColor = className.containerColor;
+        drawerColor = className.drawerColor;
+        colorIcon = className.colorIcon;
+        colorDarkIcon = className.colorDarkIcon;
+        gridSpace = className.gridSpace;
+        setState(() {});
+      }),
       child: Container(
         height: 100,
         width: 50,
@@ -436,8 +485,8 @@ class _MainPageState extends State<MainPage>
           break;
       }
       textController.text = natija.toString();
-      littleText.text = '0';
-      aligntext = const Alignment(-0.4, 0);
+      littleTextController.text = '0';
+
       setState(() {});
     }
   }
@@ -447,11 +496,9 @@ class _MainPageState extends State<MainPage>
       showInSnackBar('Raqamlar 15 tadn dan kop!');
     } else {
       if (num == '.') {
-        String temp = textController.text.substring(
-            textController.text.length - 1, textController.text.length);
         if (!textController.text.contains('.')) {
           textController.text = textController.text + num;
-          littleText.text = littleText.text + num;
+          littleTextController.text = littleTextController.text + num;
         }
       } else {
         if (textController.text != '0') {
@@ -459,10 +506,10 @@ class _MainPageState extends State<MainPage>
         } else {
           textController.text = num;
         }
-        if (littleText.text != '0') {
-          littleText.text = littleText.text + num;
+        if (littleTextController.text != '0') {
+          littleTextController.text = littleTextController.text + num;
         } else {
-          littleText.text = num;
+          littleTextController.text = num;
         }
         if (textController.text.length > 13) {
           sizeBigText = displayHeight * 0.05;
@@ -484,18 +531,19 @@ class _MainPageState extends State<MainPage>
     if (textController.text == '' || textController.text == '0') {
       textController.text = '0';
     }
-    if (littleText.text != '0' && littleText.text != '') {
-      String temp = littleText.text
-          .substring(littleText.text.length - 1, littleText.text.length);
+    if (littleTextController.text != '0' && littleTextController.text != '') {
+      String temp = littleTextController.text.substring(
+          littleTextController.text.length - 1,
+          littleTextController.text.length);
       if (temp != '/' || temp != 'x' || temp != '-' || temp != '+') {
-        littleText.text =
-            littleText.text.substring(0, littleText.text.length - 1);
+        littleTextController.text = littleTextController.text
+            .substring(0, littleTextController.text.length - 1);
       } else {
-        littleText.text =
-            littleText.text.substring(0, littleText.text.length - 2);
+        littleTextController.text = littleTextController.text
+            .substring(0, littleTextController.text.length - 2);
       }
-      if (littleText.text == '' || littleText.text == '0') {
-        littleText.text = '0';
+      if (littleTextController.text == '' || littleTextController.text == '0') {
+        littleTextController.text = '0';
       }
     }
     setState(() {});
@@ -503,12 +551,12 @@ class _MainPageState extends State<MainPage>
 
   void clear() async {
     textController.text = '0';
-    littleText.text = '';
+    littleTextController.text = '';
     sizeBigText = displayHeight * 0.092;
     animCricleClear = 20;
 
     setState(() {});
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     animCricleClear = 0;
     setState(() {});
   }
@@ -516,7 +564,7 @@ class _MainPageState extends State<MainPage>
   void devide() {
     son1 = num.parse(textController.text);
     amal = 1;
-    littleText.text = '$son1/';
+    littleTextController.text = '$son1/';
     textController.text = '0';
     setState(() {});
   }
@@ -524,7 +572,7 @@ class _MainPageState extends State<MainPage>
   void multiple() {
     son1 = num.parse(textController.text);
     amal = 2;
-    littleText.text = '${son1}x';
+    littleTextController.text = '${son1}x';
     textController.text = '0';
     setState(() {});
   }
@@ -532,7 +580,7 @@ class _MainPageState extends State<MainPage>
   void minus() {
     son1 = num.parse(textController.text);
     amal = 3;
-    littleText.text = '$son1-';
+    littleTextController.text = '$son1-';
     textController.text = '0';
 
     setState(() {});
@@ -541,20 +589,20 @@ class _MainPageState extends State<MainPage>
   void plus() {
     son1 = num.parse(textController.text);
     amal = 4;
-    littleText.text = '$son1+';
+    littleTextController.text = '$son1+';
     textController.text = '0';
 
     setState(() {});
   }
 
   void multiMinus() {
-    if (littleText.text.contains('-') ||
-        littleText.text.contains('+') ||
-        littleText.text.contains('x') ||
-        littleText.text.contains('/')) {
+    if (littleTextController.text.contains('-') ||
+        littleTextController.text.contains('+') ||
+        littleTextController.text.contains('x') ||
+        littleTextController.text.contains('/')) {
       calculate();
     }
-    littleText.text = '0';
+    littleTextController.text = '0';
 
     textController.text = (num.parse(textController.text) * (-1)).toString();
 
@@ -562,10 +610,10 @@ class _MainPageState extends State<MainPage>
   }
 
   void percentage() {
-    if (littleText.text.contains('-') ||
-        littleText.text.contains('+') ||
-        littleText.text.contains('x') ||
-        littleText.text.contains('/')) {
+    if (littleTextController.text.contains('-') ||
+        littleTextController.text.contains('+') ||
+        littleTextController.text.contains('x') ||
+        littleTextController.text.contains('/')) {
       calculate();
     }
     textController.text = (num.parse(textController.text) / 100).toString();
@@ -590,7 +638,7 @@ class _MainPageState extends State<MainPage>
   }
 
   InkWell buttons(String s, Color color,
-      {Color? colorBlu,
+      {Color? spesColor,
       bool boolIcon = false,
       void Function(String)? functionNum,
       void Function()? functionClear,
@@ -620,17 +668,9 @@ class _MainPageState extends State<MainPage>
         alignment: Alignment.center,
         height: 65, //displayHeight * 0.00175,
         width: displayHeight * 0.00175,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.white,
-              blurRadius: 8,
-              spreadRadius: 2,
-            ),
-          ],
-          color: Colors.black,
-        ),
+
+        decoration: spesColor == null ? boxDecoration : boxDecorationSpes,
+
         child: Builder(builder: (context) {
           if (boolIcon) {
             return Image.asset(
@@ -643,7 +683,7 @@ class _MainPageState extends State<MainPage>
               s,
               style: sTextStyle(
                   // ignore: prefer_if_null_operators
-                  color: colorBlu == null ? colorText : colorBlu,
+                  color: spesColor == null ? colorText : spesColor,
                   size: 32,
                   fontWeight: FontWeight.w400),
             );
