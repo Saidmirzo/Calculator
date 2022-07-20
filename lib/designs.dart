@@ -34,7 +34,6 @@ class UiFour {
 
   BoxDecoration boxDecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(5),
-    
     boxShadow: const [
       BoxShadow(
         color: Colors.black,
@@ -51,7 +50,7 @@ class UiFour {
   );
   BoxDecoration boxDecorationSpes = BoxDecoration(
     borderRadius: BorderRadius.circular(3),
-     boxShadow: const [
+    boxShadow: const [
       BoxShadow(
         color: Colors.black,
         offset: Offset(1, 3),
@@ -81,10 +80,10 @@ class UiSeven {
     borderRadius: BorderRadius.circular(5),
     gradient: const LinearGradient(
       colors: [
-        Color.fromARGB(1, 35, 47, 1),
-        Color.fromRGBO(17, 17, 17, 1),
+        Color(0xff01232F),
+        Colors.black,
       ],
-      transform: GradientRotation(-1.57),
+      transform: GradientRotation(1.57),
     ),
     //color: Colors.black,
   );
@@ -92,10 +91,10 @@ class UiSeven {
     borderRadius: BorderRadius.circular(5),
     gradient: const LinearGradient(
       colors: [
-        Color.fromARGB(1, 35, 47, 1),
-        Color.fromRGBO(17, 17, 17, 1),
+        Color(0xff01232F),
+        Colors.black,
       ],
-      transform: GradientRotation(-1.57),
+      transform: GradientRotation(1.57),
     ),
   );
 }

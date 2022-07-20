@@ -1,7 +1,9 @@
-import 'dart:ffi';
-
 import 'package:calculation/designs.dart';
+import 'package:calculation/rulePage.dart';
+import 'package:calculation/settingsPage.dart';
 import 'package:calculation/utils/const.dart';
+import 'package:calculation/utils/currency_utils/mainPage.dart';
+import 'package:calculation/utils/currency_utils/routes.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -10,9 +12,16 @@ class MainPage extends StatefulWidget {
   @override
   State<MainPage> createState() => _MainPageState();
 }
+// class _MainPageAll extends State<MainPage>{
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaff
+//   }
 
-class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+// }
+
+
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   UiNine _uiNine = UiNine();
   UiSeven _uiSeven = UiSeven();
   UiTwo _uiTwo = UiTwo();
@@ -21,6 +30,7 @@ class _MainPageState extends State<MainPage>
   late num son1, son2;
   late int amal;
   late BuildContext scaffoldContext;
+  //late TabController _tabController;
 
   //Alignment align = const Alignment(-0.8, 0);
   //Alignment aligntext = const Alignment(-0.8, 0);
@@ -59,6 +69,9 @@ class _MainPageState extends State<MainPage>
     super.initState();
     _controller = AnimationController(
         duration: const Duration(milliseconds: 1800), vsync: this);
+
+    //_tabController = TabController(length: 2, vsync: this);
+    //_tabController.animateTo(2);
 
     bgColor = _uiTwo.bgColor;
     colorText = _uiTwo.colorText;
@@ -101,7 +114,7 @@ class _MainPageState extends State<MainPage>
     var size = MediaQuery.of(context).size;
     displayHeight = size.height;
     displayWidth = size.width;
-    print(displayHeight);
+    //print(displayHeight);
 
     // bgColor = Colors.black;
     // color2 = const Color(0xff2E2F38);
@@ -120,11 +133,20 @@ class _MainPageState extends State<MainPage>
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        //automaticallyImplyLeading: false,
         backgroundColor: bgColor,
         iconTheme: IconThemeData(color: colorDarkIcon, size: 32),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: const Icon(Icons.menu),
+          );
+        }),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
             InkWell(
               child: Image.asset(
                 'assets/calc_icon.png',
@@ -133,6 +155,12 @@ class _MainPageState extends State<MainPage>
               ),
             ),
             InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CurrPage()),
+                );
+              },
               child: Image.asset(
                 'assets/curr_icon.png',
                 height: 40,
@@ -140,21 +168,40 @@ class _MainPageState extends State<MainPage>
               ),
             ),
             InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  RulePage(boxDecoration, colorIcon, colorDarkIcon)),
+                );
+              },
               child: Image.asset(
                 'assets/rule_icon.png',
                 height: 40,
                 color: colorIcon,
+                
               ),
             ),
-            InkWell(
-              child: Image.asset(
-                'assets/sett_icon.png',
-                height: 35,
-                color: colorDarkIcon,
-              ),
-            )
           ],
         ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 10),
+            height: 35,
+            width: 35,
+            child: Builder(builder: (context) {
+              return InkWell(
+                onTap: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+                child: Image.asset(
+                  'assets/sett_icon.png',
+                  height: 20,
+                  color: colorDarkIcon,
+                ),
+              );
+            }),
+          )
+        ],
       ),
       drawer: Drawer(
         width: displayWidth * 0.75,
@@ -171,12 +218,17 @@ class _MainPageState extends State<MainPage>
             //     Navigator.pop(context);
             //   },
             // ),
-            calc_view_bottom('assets/calc9_img.jpg', _uiNine),
-            calc_view_bottom('assets/calc7_img.jpg', _uiSeven),
-            calc_view_bottom('assets/calc2_img.jpg', _uiTwo),
-            calc_view_bottom('assets/calc4_img.jpg', _uiFour),
+            calc_view_button('assets/calc9_img.jpg', _uiNine),
+            calc_view_button('assets/calc7_img.jpg', _uiSeven),
+            calc_view_button('assets/calc2_img.jpg', _uiTwo),
+            calc_view_button('assets/calc4_img.jpg', _uiFour),
           ],
         ),
+      ),
+      endDrawer: Drawer(
+        width: displayWidth,
+        backgroundColor: drawerColor,
+        child: SettingsPage(),
       ),
       body: SafeArea(
         child: Builder(builder: (context) {
@@ -439,7 +491,7 @@ class _MainPageState extends State<MainPage>
   }
 
   // ignore: non_constant_identifier_names
-  InkWell calc_view_bottom(String path, dynamic className) {
+  InkWell calc_view_button(String path, dynamic className) {
     return InkWell(
       onTap: (() {
         print('tap');
